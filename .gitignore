@@ -1,6 +1,7 @@
+.cache/
 build/
 capsicum.egg-info/
-capsicum/__pycache__/
+**/__pycache__/
 dist/
 
 # virtualenv
