@@ -17,5 +17,5 @@ setup(
     install_requires=_requires_from_file('requirements.txt'),
     url='https://github.com/m-mizutani/capsicum',
     packages=['capsicum'],
+    scripts=['bin/capsicum'],
 )
-
