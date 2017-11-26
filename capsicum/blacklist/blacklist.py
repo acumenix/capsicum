@@ -1,7 +1,7 @@
 import abc
 import collections
 import datetime
-
+import json
 
 # 
 # BlackList management
@@ -18,13 +18,19 @@ class Repository(abc.ABC):
             'timestamp': timestamp or datetime.datetime.now().timestamp(),
         })
 
+    def items(self):
+        return self._map.items()
+
     def __len__(self):
         return len(self._map)
 
     def __bool__(self):
         return True
 
+    def __getitem__(self, key):
+        return self._map[key]
 
+    
 class Plugin(abc.ABC):
     def __init__(self):
         self._rep = Repository()
@@ -44,13 +50,29 @@ class Plugin(abc.ABC):
         self._rep.put(key, reason, self.source_name())
         
 
-class Backend:
+class Backend(abc.ABC):
     @abc.abstractmethod
     def load(self, repository):
         raise NotImplemented()
 
     @abc.abstractmethod
-    def sync(self, repository):
+    def dump(self, repository):
         raise NotImplemented()
     
 
+class JsonFile(Backend):
+    def __init__(self, **kwargs):
+        self._path = kwargs['path']
+
+    def load(self, repository):
+        for line in open(self._path, 'rt'):
+            row = line.strip().split('\t')
+            key = row[0]
+            o = json.loads(row[1])
+            repository.put(key, o['reason'], o['src'], o['timestamp'])
+            
+    def dump(self, repository):
+        fd = open(self._path, 'wt')
+        for key, arr in repository.items():
+            for o in arr:
+                fd.write('{}\t{}\n'.format(key, json.dumps(o)))
