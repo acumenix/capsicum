@@ -1,12 +1,27 @@
 from .. import base
 
+from .snort import EmergingThreat
+from .sslbl import SSLBL
+
 
 class BlackList(base.Stream):
-    def __init__(self):
-        pass
+    def __init__(self, backend='memory', **kwargs):
+        self._plugins = [
+            EmergingThreat(),
+            SSLBL(),
+        ]
+
+        self._repo = base.Repository()
+        for p in self._plugins:
+            p.set_repository(self._repo)
     
+        self._backend = {
+            'memory': None,
+        }[backend]
+
     def sync(self):
-        pass
-    
+        for p in self._plugins:
+            p.fetch()
+        
     def receive(self, tag: str, timestamp: int, data: dict):
         self.emit(tag, timestamp, data)
