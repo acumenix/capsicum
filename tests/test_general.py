@@ -6,7 +6,7 @@ def test_top():
     parser = capsicum.parser.SSHD()
     blist = capsicum.BlackList()
     blist.sync()
-    notify = capsicum.notify.Stdout()
+    notify = capsicum.notify.Queue()
     
     spout.pipe(parser).pipe(blist).pipe(notify)
     spout.drain()

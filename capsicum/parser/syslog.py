@@ -1,14 +1,14 @@
 from .. import base
 import re
+import datetime
 
 SYSLOG_REGEX = re.compile('^(\S{3} \d{1,2} \d{2}:\d{2}:\d{2}) '
-                          '(\S+) (\S+)\\[(\d+)\]\s*(.*)$')
+                          '(\S+) (\S+)\\[(\d+)\]:\s*(.*)$')
 
 
 def syslog_parser(data):
     # Nov 21 06:00:24 ip-172-31-7-118 sshd[23511]:
     line = data.get('message')
-    
     mo = SYSLOG_REGEX.search(line)
     if mo:
         data.update({
@@ -25,13 +25,17 @@ def syslog_parser(data):
 
 
 class SSHD(base.Stream):
-    REGEX = re.compile('^(Failed|Accepted) (\S+) for (invalid user |) (\S+)'
-                       ' from (\S+) port (\d+) ')
+
+    AUTH_REGEX = re.compile(
+        '^(Failed|Accepted) (\S+) for (invalid user |)(\S+)'
+        ' from (\S+) port (\d+) '
+    )
+    BASE_DAY = datetime.datetime.now()
 
     def receive(self, data):
-        obj = syslog_parser(data)
+        obj = syslog_parser(data)        
+        mo = SSHD.AUTH_REGEX.search(obj['message'])        
 
-        mo = SSHD.REGEX.search(obj['message'])
         if mo:
             obj.update({
                 'result':      mo.group(1),
@@ -41,4 +45,7 @@ class SSHD(base.Stream):
                 'remote_addr': mo.group(5),
                 'remote_port': mo.group(6),
             })
+            dt = datetime.datetime.strptime(obj['datetime'],
+                                            '%b %d %H:%M:%S')
+            dt = dt.replace(year=SSHD.BASE_DAY.year)
             self.emit(obj)

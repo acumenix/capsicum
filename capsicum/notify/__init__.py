@@ -15,10 +15,15 @@ class Queue(base.Stream):
     def receive(self, event):
         self._queue.append(event)
 
-    @property
-    def queue(self):
-        return self._queue[:]
-        
+    def __getitem__(self, key):
+        return self._queue[key]
+
+    def __bool__(self):
+        return True
+    
+    def __len__(self):
+        return len(self._queue)
+    
     def __iter__(self):
         return self
 

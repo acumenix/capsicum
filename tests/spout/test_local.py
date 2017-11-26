@@ -10,5 +10,5 @@ def test_file():
     log = 'Nov 23 11:35:02 pylon sshd[8142]: pam_unix(sshd:auth): ' \
           'check pass; user unknown'
 
-    assert len(q.queue) == 20
-    assert q.queue[0]['message'] == log
+    assert q[0]['message'] == log
+    assert len(q) == 20
