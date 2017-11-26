@@ -1,5 +1,4 @@
 import abc
-import typing
 
 
 class Pipe(abc.ABC):
@@ -7,7 +6,7 @@ class Pipe(abc.ABC):
         self._dst = None
         pass
 
-    def pipe(self, dst) -> typing.TypeVar('Pipe'):
+    def pipe(self, dst):
         self._dst = dst
         return self._dst
 
