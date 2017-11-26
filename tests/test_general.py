@@ -9,5 +9,5 @@ def test_top():
     notify = capsicum.notify.Stdout()
     
     spout.pipe(parser).pipe(blist).pipe(notify)
-    spout.start()
+    spout.drain()
 

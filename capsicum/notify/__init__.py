@@ -15,8 +15,16 @@ class Queue(base.Stream):
     def receive(self, event):
         self._queue.append(event)
 
-    def pop(self):
+    @property
+    def queue(self):
+        return self._queue[:]
+        
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         if len(self._queue) > 0:
-            self._queue.pop(0)
+            return self._queue.pop(0)
         else:
-            return None
+            raise StopIteration()
+

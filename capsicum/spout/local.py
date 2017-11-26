@@ -7,6 +7,7 @@ class File(base.Spout):
 
     def drain(self):
         for line in open(self._path, 'rt'):
-            yield {'message': line}
+            self.emit({'message': line.strip()})
+
 
 

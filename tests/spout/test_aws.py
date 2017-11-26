@@ -9,7 +9,9 @@ from capsicum.spout import aws
 
 # TEST_BUCKET
 
-def test_load_data():
+
+''' DISABLED
+def test_load_data():    
     spout = aws.FluentdS3(os.environ['TEST_S3_BUCKET'])
     iso_fmt = '%Y-%m-%dT%H:%M:%S'
     start_dt = datetime.datetime.strptime(os.environ['TEST_S3_START'], iso_fmt, )
@@ -29,3 +31,4 @@ def test_load_data():
         count += 1
 
     assert 0 < count
+'''

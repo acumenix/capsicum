@@ -20,10 +20,6 @@ class Spout(Pipe, abc.ABC):
     def drain(self):
         pass
 
-    def start(self):
-        for d in self.drain():
-            self.emit(d)
-
             
 class Stream(Pipe, abc.ABC):
     @abc.abstractmethod
