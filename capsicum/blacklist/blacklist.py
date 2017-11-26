@@ -7,6 +7,7 @@ import json
 # BlackList management
 #
 
+
 class Repository(abc.ABC):
     def __init__(self):
         self._map = collections.defaultdict(list)
@@ -32,18 +33,12 @@ class Repository(abc.ABC):
 
     
 class Plugin(abc.ABC):
-    def __init__(self):
-        self._rep = Repository()
-
-    def set_repository(self, rep):
-        self._rep = rep
-
     @abc.abstractmethod
     def source_name(self):
         raise NotImplemented()
 
     @abc.abstractmethod
-    def fetch(self):
+    def fetch(self, repository):
         raise NotImplemented()
     
     def put(self, key, reason):
@@ -56,10 +51,24 @@ class Backend(abc.ABC):
         raise NotImplemented()
 
     @abc.abstractmethod
-    def dump(self, repository):
+    def save(self, repository):
         raise NotImplemented()
     
 
+class Memory(Backend):
+    def __init__(self, **kwargs):
+        self._repo = None
+
+    def load(self, repository):
+        if self._repo:
+            for key, arr in self._repo.items():
+                for o in arr:
+                    repository.put(key, o['reason'], o['src'], o['timestamp'])
+            
+    def save(self, repository):
+        self._repo = repository
+    
+    
 class JsonFile(Backend):
     def __init__(self, **kwargs):
         self._path = kwargs['path']
@@ -71,7 +80,7 @@ class JsonFile(Backend):
             o = json.loads(row[1])
             repository.put(key, o['reason'], o['src'], o['timestamp'])
             
-    def dump(self, repository):
+    def save(self, repository):
         fd = open(self._path, 'wt')
         for key, arr in repository.items():
             for o in arr:

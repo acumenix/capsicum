@@ -22,6 +22,10 @@ def backend():
     return r1, r2
 
 
+def tsort(x):
+    return sorted(x, key=lambda x: x['timestamp'])
+
+
 def test_json_file(backend):
     r1, r2 = backend
     tmp = tempfile.mkstemp()
@@ -33,15 +37,15 @@ def test_json_file(backend):
     assert len(r1) == 3
     assert len(r2) == 0
     
-    j1.dump(r1)
+    j1.save(r1)
     j2.load(r2)
 
     assert len(r1) == len(r2)
-
-    tsort = lambda x: sorted(x, key=lambda x: x['timestamp'])
 
     for k, arr in r2.items():
         for o1, o2 in zip(tsort(arr), tsort(r1[k])):
             assert o1['timestamp'] == o2['timestamp']
 
     os.remove(tmp[1])
+
+
