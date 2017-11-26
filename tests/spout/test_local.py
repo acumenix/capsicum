@@ -10,5 +10,6 @@ def test_file():
     log = 'Nov 23 11:35:02 pylon sshd[8142]: pam_unix(sshd:auth): ' \
           'check pass; user unknown'
 
-    assert q[0]['message'] == log
+    # (tag, timetamp, data) in 1st event 
+    assert q[0][2]['message'] == log
     assert len(q) == 20

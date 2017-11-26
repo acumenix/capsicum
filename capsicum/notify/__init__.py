@@ -13,7 +13,7 @@ class Queue(base.Stream):
         self._queue = []
         
     def receive(self, tag: str, timestamp: int, data: dict):
-        self._queue.append(data)
+        self._queue.append((tag, timestamp, data))
 
     def __getitem__(self, key):
         return self._queue[key]
