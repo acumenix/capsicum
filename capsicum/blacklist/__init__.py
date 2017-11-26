@@ -3,6 +3,8 @@ from .. import base
 from .snort import EmergingThreat
 from .sslbl import SSLBL
 
+from . import blacklist
+
 
 class BlackList(base.Stream):
     def __init__(self, backend='memory', **kwargs):
@@ -11,7 +13,7 @@ class BlackList(base.Stream):
             SSLBL(),
         ]
 
-        self._repo = base.Repository()
+        self._repo = blacklist.Repository()
         for p in self._plugins:
             p.set_repository(self._repo)
     

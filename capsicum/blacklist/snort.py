@@ -1,8 +1,9 @@
-from .. import base
+from . import blacklist
+
 import requests
 
 
-class EmergingThreat(base.BlackListPlugin):
+class EmergingThreat(blacklist.Plugin):
     DEFAULT_BASE_URL = 'https://rules.emergingthreats.net/' \
                        'open/snort-edge/rules'
     DEFAULT_RULES = [

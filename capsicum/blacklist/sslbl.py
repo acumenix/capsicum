@@ -1,10 +1,9 @@
+from . import blacklist
+
 import requests
-import datetime
-
-from .. import base
 
 
-class SSLBL(base.BlackListPlugin):
+class SSLBL(blacklist.Plugin):
     DEFAULT_URL = 'https://sslbl.abuse.ch/blacklist/sslipblacklist_aggressive.csv'
     
     def source_name(self):
