@@ -1,15 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-import datetime
-import os
-import boto3
+from .. import base
 
 
-class SyslogFile:
-    def __init__(self, fpath):
-        self._fpath = fpath
+class File(base.Spout):
+    def __init__(self, **kwargs):
+        self._path = kwargs['path']
 
-    def read(self, start_dt, end_dt, **kwargs):
-        for line in open(self._fpath, 'rt'):
-            yield line
+    def drain(self):
+        for line in open(self._path, 'rt'):
+            yield {'message': line}
+
+

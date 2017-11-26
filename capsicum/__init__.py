@@ -3,10 +3,10 @@
 import logging
 
 
-class Habanero(object):
-    def __init__(self):
-        pass
-
+from . import spout
+from . import parser
+from .blacklist import BlackList
+from . import notify
 
 # Set default logging handler to avoid "No handler found" warnings.
 
