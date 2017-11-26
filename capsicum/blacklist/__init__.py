@@ -8,5 +8,5 @@ class BlackList(base.Stream):
     def sync(self):
         pass
     
-    def receive(self, ev):
-        self.emit(ev)
+    def receive(self, tag: str, timestamp: int, data: dict):
+        self.emit(tag, timestamp, data)

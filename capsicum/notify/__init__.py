@@ -3,8 +3,8 @@ from .. import base
 
 
 class Stdout(base.Stream):
-    def receive(self, event):
-        pprint.pprint(event)
+    def receive(self, tag: str, timestamp: int, data: dict):
+        pprint.pprint(data)
 
         
 class Queue(base.Stream):
@@ -12,8 +12,8 @@ class Queue(base.Stream):
         super().__init__()
         self._queue = []
         
-    def receive(self, event):
-        self._queue.append(event)
+    def receive(self, tag: str, timestamp: int, data: dict):
+        self._queue.append(data)
 
     def __getitem__(self, key):
         return self._queue[key]

@@ -32,7 +32,7 @@ class SSHD(base.Stream):
     )
     BASE_DAY = datetime.datetime.now()
 
-    def receive(self, data):
+    def receive(self, tag: str, timestamp: int, data: dict):
         obj = syslog_parser(data)        
         mo = SSHD.AUTH_REGEX.search(obj['message'])        
 
@@ -48,4 +48,4 @@ class SSHD(base.Stream):
             dt = datetime.datetime.strptime(obj['datetime'],
                                             '%b %d %H:%M:%S')
             dt = dt.replace(year=SSHD.BASE_DAY.year)
-            self.emit(obj)
+            self.emit('sshd.auth', dt.timestamp(), obj)

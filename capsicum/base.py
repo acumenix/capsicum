@@ -1,4 +1,5 @@
 import abc
+import typing
 
 
 class Pipe(abc.ABC):
@@ -6,13 +7,13 @@ class Pipe(abc.ABC):
         self._dst = None
         pass
 
-    def pipe(self, dst):
+    def pipe(self, dst) -> typing.TypeVar('Pipe'):
         self._dst = dst
         return self._dst
 
-    def emit(self, data):
+    def emit(self, tag: str, timestamp: int, data: dict):
         if self._dst:
-            self._dst.receive(data)
+            self._dst.receive(tag, timestamp, data)
     
 
 class Spout(Pipe, abc.ABC):
@@ -23,5 +24,5 @@ class Spout(Pipe, abc.ABC):
             
 class Stream(Pipe, abc.ABC):
     @abc.abstractmethod
-    def receive(self, data):
+    def receive(self, tag: str, timestamp: int, data: dict):
         pass
