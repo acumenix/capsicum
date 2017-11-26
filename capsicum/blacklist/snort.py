@@ -11,9 +11,6 @@ class EmergingThreat(blacklist.Plugin):
         'emerging-compromised.rules',
     ]
 
-    def source_name(self):
-        return 'EmergingThreat'
-
     @staticmethod
     def extract_addrs(line):
         s = line.strip()
@@ -24,7 +21,7 @@ class EmergingThreat(blacklist.Plugin):
 
         return ipaddr
 
-    def fetch(self):
+    def fetch(self, repo):
         for rule_name in EmergingThreat.DEFAULT_RULES:
             url = '{}/{}'.format(EmergingThreat.DEFAULT_BASE_URL, rule_name)
             
@@ -44,6 +41,6 @@ class EmergingThreat(blacklist.Plugin):
                         ipaddr_list += EmergingThreat.extract_addrs(hdr[idx])
 
                 for ipaddr in set(ipaddr_list):
-                    self.put(ipaddr, body.get('msg'))
-                           
+                    repo.put(ipaddr, body.get('msg'), 'EmergingThreat')
+
         

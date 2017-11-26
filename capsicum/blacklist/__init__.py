@@ -13,9 +13,7 @@ class BlackList(base.Stream):
             SSLBL(),
         ]
 
-        self._repo = blacklist.Repository()
-    
-        self._backend = {
+        self._repo = {
             'memory': blacklist.Memory,
             'json': blacklist.JsonFile,
         }[backend](**kwargs)
@@ -26,6 +24,8 @@ class BlackList(base.Stream):
     def sync(self):
         for p in self._plugins:
             p.fetch(self._repo)
+
+        self._repo.sync()
 
     def receive(self, tag: str, timestamp: int, data: dict):
         self.emit(tag, timestamp, data)

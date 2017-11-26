@@ -31,57 +31,44 @@ class Repository(abc.ABC):
     def __getitem__(self, key):
         return self._map[key]
 
+    @abc.abstractmethod
+    def sync(self):
+        raise NotImplemented()
+
     
 class Plugin(abc.ABC):
     @abc.abstractmethod
-    def source_name(self):
-        raise NotImplemented()
-
-    @abc.abstractmethod
     def fetch(self, repository):
         raise NotImplemented()
-    
+
     def put(self, key, reason):
         self._rep.put(key, reason, self.source_name())
         
 
-class Backend(abc.ABC):
-    @abc.abstractmethod
-    def load(self, repository):
-        raise NotImplemented()
-
-    @abc.abstractmethod
-    def save(self, repository):
-        raise NotImplemented()
+class Memory(Repository):
+    def sync(self):
+        pass
     
-
-class Memory(Backend):
+    
+class JsonFile(Repository):
     def __init__(self, **kwargs):
-        self._repo = None
-
-    def load(self, repository):
-        if self._repo:
-            for key, arr in self._repo.items():
-                for o in arr:
-                    repository.put(key, o['reason'], o['src'], o['timestamp'])
-            
-    def save(self, repository):
-        self._repo = repository
-    
-    
-class JsonFile(Backend):
-    def __init__(self, **kwargs):
+        super().__init__()
         self._path = kwargs['path']
+        self.load()
 
-    def load(self, repository):
+    def sync(self):
+        # assume that json file is not changed by any other process
+        self.save()
+        
+    def load(self):
         for line in open(self._path, 'rt'):
             row = line.strip().split('\t')
             key = row[0]
             o = json.loads(row[1])
-            repository.put(key, o['reason'], o['src'], o['timestamp'])
+            self.put(key, o['reason'], o['src'], o['timestamp'])
             
-    def save(self, repository):
+    def save(self):
         fd = open(self._path, 'wt')
-        for key, arr in repository.items():
+        for key, arr in self.items():
             for o in arr:
                 fd.write('{}\t{}\n'.format(key, json.dumps(o)))
