@@ -31,6 +31,9 @@ class Repository(abc.ABC):
     def __getitem__(self, key):
         return self._map[key]
 
+    def get(self, key):
+        return self._map.get(key)
+    
     @abc.abstractmethod
     def sync(self):
         raise NotImplemented()

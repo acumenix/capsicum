@@ -28,4 +28,6 @@ class BlackList(base.Stream):
         self._repo.sync()
 
     def receive(self, tag: str, timestamp: int, data: dict):
-        self.emit(tag, timestamp, data)
+        remote_addr = data.get('remote_addr')
+        if self._repo.get(remote_addr) is not None:
+            self.emit(tag, timestamp, data)

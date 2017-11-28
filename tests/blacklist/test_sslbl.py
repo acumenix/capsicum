@@ -16,4 +16,3 @@ def test_bleeding_edge():
 
     b.fetch(r)
     assert len(r) > 0
-

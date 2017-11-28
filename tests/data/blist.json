@@ -1,4 +1,4 @@
 10.0.0.1	{"reason": "cnc", "src": "a", "timestamp": 10000}
 10.0.0.1	{"reason": "spam", "src": "a", "timestamp": 20000}
 10.0.0.2	{"reason": "bot", "src": "b", "timestamp": 30000}
-10.0.0.3	{"reason": "cnc", "src": "c", "timestamp": 40000}
+172.16.4.3	{"reason": "cnc", "src": "c", "timestamp": 40000}
