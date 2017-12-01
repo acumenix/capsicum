@@ -6,7 +6,7 @@ from .sslbl import SSLBL
 from . import blacklist
 
 
-class BlackList(base.Stream):
+class BlackList:
     def __init__(self, backend='memory', **kwargs):
         self._plugins = [
             EmergingThreat(),
@@ -27,7 +27,8 @@ class BlackList(base.Stream):
 
         self._repo.sync()
 
-    def receive(self, tag: str, timestamp: int, data: dict):
-        remote_addr = data.get('remote_addr')
-        if self._repo.get(remote_addr) is not None:
-            self.emit(tag, timestamp, data)
+    def lookup(self, key):
+        if key:
+            return self._repo.get(key)
+        else:
+            return None

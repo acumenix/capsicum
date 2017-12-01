@@ -6,7 +6,10 @@ import logging
 from . import spout
 from . import parser
 from .blacklist import BlackList
+from .rule.engine import RuleEngine
+from .base import Rule
 from . import notify
+
 
 # Set default logging handler to avoid "No handler found" warnings.
 
