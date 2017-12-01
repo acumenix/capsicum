@@ -35,7 +35,7 @@ class Stream(Pipe, abc.ABC):
 class Rule(abc.ABC):    
     class result(enum.Enum):
         NORMAL = None
-        ALERT = enum.auto()
+        ALERT = 1
 
     def __init__(self):
         self._blacklist = None
