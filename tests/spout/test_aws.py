@@ -7,12 +7,13 @@ import boto3
 from ..helper import TEST_PREF
 from capsicum.spout import aws
 import capsicum
+import pytest
 
 # TEST_BUCKET
 
 
+@pytest.mark.skipif(not TEST_PREF, reason='no test config')
 def test_s3():
-
     prefix = TEST_PREF['aws']['s3'].get('prefix')
     postfix = 'syslog-sshd'
     if prefix:
