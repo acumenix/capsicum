@@ -2,33 +2,32 @@
 # -*- coding: utf-8 -*-
 
 
-import os
-import datetime
-from capsicum.spout import aws
+import boto3
 
+from ..helper import TEST_PREF
+from capsicum.spout import aws
+import capsicum
 
 # TEST_BUCKET
 
 
-''' DISABLED
-def test_load_data():    
-    spout = aws.FluentdS3(os.environ['TEST_S3_BUCKET'])
-    iso_fmt = '%Y-%m-%dT%H:%M:%S'
-    start_dt = datetime.datetime.strptime(os.environ['TEST_S3_START'], iso_fmt, )
-    end_dt   = datetime.datetime.strptime(os.environ['TEST_S3_END'], iso_fmt)
-    
-    start_dt = start_dt.replace(tzinfo=datetime.timezone.utc)
-    end_dt   = end_dt.replace(tzinfo=datetime.timezone.utc)
+def test_s3():
 
-    count = 0
-    for ev in spout.read(start_dt, end_dt):
-        assert 'message' in ev
-        assert '@tag' in ev
-        assert '@datetime' in ev
-        assert start_dt <= ev['@datetime']
-        assert ev['@datetime'] <= end_dt
+    prefix = TEST_PREF['aws']['s3'].get('prefix')
+    postfix = 'syslog-sshd'
+    if prefix:
+        key = '{}/{}'.format(prefix, postfix)
+    else:
+        key = postfix
 
-        count += 1
+    q = capsicum.notify.Queue()
+        
+    spout = aws.S3(bucket=TEST_PREF['aws']['s3']['bucket'],
+                   prefix=key)
+    spout.pipe(q)
+    spout.drain()
 
-    assert 0 < count
-'''
+    assert len(q) > 0
+    for tag, ts, data in q:
+        assert ('Nov 23 ' in data['message'] or
+                'Nov 25 ' in data['message'])
