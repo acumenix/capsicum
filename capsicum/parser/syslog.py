@@ -24,28 +24,11 @@ def syslog_parser(data):
         return data
 
 
-class SSHD(base.Stream):
-
-    AUTH_REGEX = re.compile(
-        '^(Failed|Accepted) (\S+) for (invalid user |)(\S+)'
-        ' from (\S+) port (\d+) '
-    )
+class Syslog(base.Stream):
     BASE_DAY = datetime.datetime.now()
-
+    
     def receive(self, tag: str, timestamp: int, data: dict):
-        obj = syslog_parser(data)        
-        mo = SSHD.AUTH_REGEX.search(obj['message'])        
-
-        if mo:
-            obj.update({
-                'result':      mo.group(1),
-                'auth':        mo.group(2),
-                'invalid':     mo.group(3),
-                'username':    mo.group(4),
-                'remote_addr': mo.group(5),
-                'remote_port': mo.group(6),
-            })
-            dt = datetime.datetime.strptime(obj['datetime'],
-                                            '%b %d %H:%M:%S')
-            dt = dt.replace(year=SSHD.BASE_DAY.year)
-            self.emit('sshd.auth', dt.timestamp(), obj)
+        obj = syslog_parser(data)
+        dt = datetime.datetime.strptime(obj['datetime'],
+                                        '%b %d %H:%M:%S')
+        self.emit(None, dt.timestamp(), obj)

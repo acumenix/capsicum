@@ -3,7 +3,8 @@ import capsicum
 
 def test_top():
     spout = capsicum.spout.local.File(path='tests/spout/data/sshd.log')
-    parser = capsicum.parser.SSHD()
+    p1 = capsicum.parser.Syslog()
+    p2 = capsicum.parser.Sshd()
     
     blist = capsicum.BlackList('json', path='tests/data/blist.json')
     
@@ -13,7 +14,7 @@ def test_top():
     
     notify_queue = capsicum.notify.Queue()
     
-    spout.pipe(parser).pipe(engine).pipe(notify_queue)
+    spout.pipe(p1).pipe(p2).pipe(engine).pipe(notify_queue)
     spout.drain()
 
     assert len(notify_queue) == 1
