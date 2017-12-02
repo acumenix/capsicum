@@ -1,16 +1,19 @@
 language: python
 python:
-  - "3.4"
-  - "3.5"
-  - "3.5-dev" # 3.5 development branch
-  - "3.6"
-  - "3.6-dev" # 3.6 development branch
-  - "3.7-dev" # 3.7 development branch
-  - "nightly"
-# command to install dependencies
+- '3.4'
+- '3.5'
+- 3.5-dev
+- '3.6'
+- 3.6-dev
+- 3.7-dev
+- nightly
 install:
-  - pip install pipenv
-  - pipenv install
-# command to run tests
+- pip install pipenv
+- pipenv install
 script:
-  - pytest # or py.test for Python versions 3.5 and below
+- pytest
+env:
+  global:
+  - secure: We65E5fSxi2GLTFRDemPNHeCMX5xa1dHfxa05hnyCzZOuHl1stmSnEWOLwVCEYkacZpLymNBDmIlDpm8MfUNvTJq90/eI1fyMjBOcqObC45LTMDswNNU0IAnYBec6vOh0FFaX9ZyzYOAo4tXG21C9i3jMrTj+1mcMQlGM9CnYnJ10bJ+JEhiPRHomlkzjmvDu7YewmWdUeuE8W0qhonTgwK8KN2tyHicYjGBVApRcTGnHFX8hDpkROiH52A1+jFF+CrAg0u4fgeFq8jroniEyu75kbETZ2evZ8Mq+Hq7b0HZHZhjsgKsJpxJ8YIM/+oZ4yCNyYvg0qfg4Nm1SbK5EWo8/vu3iIQkDG7C+0rc9OXFgk6zblKSjE6GApMAhlAzO/9YA9XY3xcPQLt3B81T523o1A4u2E2Eo2T7mM44oOpuw5yKxiTYz6XLK7OD5d4nxR/y5bSkdMViavO08y0RG90/3zxj73R4NRU9lnqLTXzDjj7FyeaA85AWcVVBk0RGcK7/sNocL+IolIc4sjtolZj+9d2ywcS/d0HmXllqbRntA+7S7QrCJ0MoVqJWV4wGyQrbl70YTUJOHJ9gO7dj8O9yTHyRnICVWUXmNhRv/WsPwt3I19JomxxcQ3wJxT38SGQD34Fe2Z4rxvFADyK1Y5+B6RORfIpqAww+uqhJIXs=
+  - secure: Fd6BD9+/arQIwL+eYt1FW5ZJMIiMY/uq9XYbbx8Xcn0aApd47FuLhZmZqVKaKfyZpQzP9vHf5x9VfJ2Yco258slGHNxjHPyWIZ031/OtkuOhBL+4QxGNX2qxoVq48uwz+zIXNtEfEnPmg5FY0/5zUArezCzMdCgnHmcjT5qaQUtJFdAgRbsNHmAKIqBDQ4MElIJho+wUs8wJzVUYcSWmaYY98m23tBLiaGxu8L2YSQXNwSRRcBqpgyWx4pU7C5mmKc9JdXgFtPXDifaGJPJWohbMJlFqmGYx0JG2cJ8AJW834LWhzC6GA47Xc7ykVb560CJh9p6a32BsuocmCpvhpqoysZ7ud6o4FbToRQdD4VV2yOg/2CSnmFb2tYLB7Pl8p5zwTPxWYgWxo6++/p+T61quac4GKFXLRF0wLJsDfcrDbTakVPQc5WfgW/Iaz/OWIpPvh47DfDqOxGIW0Ft11Dq8nZRyLGOltXZSLCRZhdiU7X6MX+681vZF5UhK7dFo/pPBgEBBsRXoFGl3PJH8tvME4KrTQNNxo1mN5JMpFKwfZ2bzS+s6KYlmor/ClS9STCHUCsMXG4uJwBY4yBI1NKwr7vLcJwX2sTSRROTudkTzk9vmmLgO5lYrrHrdeeI7RDJhd6bDhMdrvXZ0iy4B/W++205whwjn1tMD9k6L2Y8=
+  - CAPSICUM_TEST_CONFIG=test.orig.yml
