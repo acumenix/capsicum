@@ -9,10 +9,12 @@ import enum
 class Pipe(abc.ABC):
     def __init__(self):
         self._dst = None
+        self._src = None
         pass
 
     def pipe(self, dst):
         self._dst = dst
+        dst._src = self
         return self._dst
 
     def emit(self, tag: str, timestamp: int, data: dict):
@@ -22,6 +24,12 @@ class Pipe(abc.ABC):
     def head(self):
         if self._dst:
             return self._dst.head()
+        else:
+            return self
+
+    def root(self):
+        if self._src:
+            return self._src.root()
         else:
             return self
 
