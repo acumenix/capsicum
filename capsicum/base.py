@@ -19,6 +19,12 @@ class Pipe(abc.ABC):
         if self._dst:
             self._dst.receive(tag, timestamp, data)
     
+    def head(self):
+        if self._dst:
+            return self._dst.head()
+        else:
+            return self
+
 
 class Spout(Pipe, abc.ABC):
     @abc.abstractmethod
