@@ -29,7 +29,7 @@ def test_paloalto_log():
     spout.drain()
     assert len(q) == 2
     tag, timestamp, data = q[1]
-    assert tag == 'paloalto.user.info'
+    assert tag == 'paloalto.traffic'
     assert timestamp == 1512087316
     assert data['Destination address'] == '10.9.14.27'
     assert data['Source address'] == '172.16.102.21'
