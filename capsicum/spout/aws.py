@@ -37,6 +37,12 @@ def download(args):
     return text
     
 
+class PoolStub:
+    def imap(self, func, arr):
+        for o in arr:
+            yield func(o)
+
+
 class S3(base.Spout):
     WORKER_NUM = 8
     
@@ -48,7 +54,9 @@ class S3(base.Spout):
             
     def drain(self):
         client = boto3.Session().client('s3')
-        pool = mp.Pool(S3.WORKER_NUM)
+        # pool = mp.Pool(S3.WORKER_NUM)
+        pool = PoolStub()
+        
         next_token = None
         truncated = True
         
