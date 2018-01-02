@@ -2,6 +2,8 @@ import abc
 import collections
 import datetime
 import json
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
 
 # 
 # BlackList management
@@ -75,3 +77,46 @@ class JsonFile(Repository):
         for key, arr in self.items():
             for o in arr:
                 fd.write('{}\t{}\n'.format(key, json.dumps(o)))
+
+import pprint
+
+class DynamoDB(Repository):
+    def __init__(self, **kwargs):
+        super().__init__()
+        self._region = kwargs['region']
+        self._table_name = kwargs['table']
+
+        self._client = boto3.resource('dynamodb')
+        self._table  = self._client.Table(self._table_name)
+        self._cache = {}
+        
+    def sync(self):
+        # assume that json file is not changed by any other process
+        self.save()
+        
+    def load(self):
+        pass
+            
+    def __getitem__(self, key):
+        return self._map[key]
+
+    def get(self, key):
+        if key in self._cache:
+            res = self._cache[key]
+        else:
+            res = self._table.query(
+                KeyConditionExpression=Key('domain_name').eq(key)
+            )
+            self._cache[key] = res
+            
+        return res['Items'][0] if len(res['Items']) > 0 else None
+    
+    def save(self):       
+        for key, arr in self.items():
+            for x in arr:
+                obj = {
+                    'domain_name': key,
+                }
+                obj.update(x)
+                res = self._table.put_item(Item=obj)
+

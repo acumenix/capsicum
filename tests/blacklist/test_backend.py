@@ -43,4 +43,22 @@ def test_json_file():
 
     os.remove(tmp[1])
 
+import pprint
 
+def test_dynamo_db():
+    TABLE_NAME = 'capsicum-test-domain'
+    r1 = blacklist.DynamoDB(region='ap-northeast-1', table=TABLE_NAME)
+    r1.put('example.com', 'cnc', 'a', 10000)
+    r1.put('example.org', 'spam', 'a', 20000)
+    r1.put('example.net', 'bot', 'b', 30000)
+    r1.put('example.xxx', 'cnc', 'c', 40000)
+    r1.save()
+
+    r2 = blacklist.DynamoDB(region='ap-northeast-1', table=TABLE_NAME)
+    res = r2.get('example.org')
+    assert res['reason'] == 'spam'
+    
+    res = r2.get('notfound.com')
+    assert res is None
+
+    
