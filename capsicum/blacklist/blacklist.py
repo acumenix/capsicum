@@ -80,13 +80,14 @@ class JsonFile(Repository):
 
 import pprint
 
+
 class DynamoDB(Repository):
     def __init__(self, **kwargs):
         super().__init__()
         self._region = kwargs['region']
         self._table_name = kwargs['table']
 
-        self._client = boto3.resource('dynamodb')
+        self._client = boto3.resource('dynamodb', region_name=self._region)
         self._table  = self._client.Table(self._table_name)
         self._cache = {}
         
